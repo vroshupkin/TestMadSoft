@@ -9,8 +9,17 @@ export const TestingPage = () =>
 {  
 	const [selectTest, setSelectTest] = useState(0);
 
-	const testingTest = TestData[selectTest].text;
+	// const testingTest = TestData[selectTest].text;
 
+	const submit = () => 
+	{
+		if(selectTest < TestData.length - 1)
+		{
+			setSelectTest(selectTest => selectTest + 1)
+		}
+	};
+    
+	
 	return (
 		<div className={s.container}>
 			<div>
@@ -19,9 +28,9 @@ export const TestingPage = () =>
 					<div className={s.test_name}>Тестирование</div>
 				</div>
 			
-				<Progressbar count={8} selectTest={selectTest}/>
+				<Progressbar count={TestData.length - 1} selectTest={selectTest}/>
 
-				<TestingBody text={testingTest}/>
+				<TestingBody data={TestData[selectTest]} onSubmit={submit}/>
 			</div>
 		</div>
 		
