@@ -1,17 +1,17 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import styles from './Progressbar.module.sass'
 
 const CompleteBars: FC<{count: number}> = ({count}) => 
 	<>
-		{Array(count).fill(
-			<div className={styles.complete_bar}/>
+		{count > 0 && Array(count).fill(null).map((_, index) => 
+			<div className={styles.complete_bar} key={index}/>
 		)}
 	</>
 
 const UncompleteBars: FC<{count: number}> = ({count}) => 
 	<>
-		{Array(count).fill(
-			<div className={styles.uncomplete_bar}/>
+		{count > 0 && Array(count).fill(null).map((_, index) => 
+			<div className={styles.uncomplete_bar} key={index}/>
 		)}
 	</>
 

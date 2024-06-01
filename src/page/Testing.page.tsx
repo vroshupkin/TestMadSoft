@@ -2,35 +2,42 @@ import { useState } from 'react';
 import { Progressbar } from '../components/Progressbar'
 import {Timer } from '../components/Timer'
 import s from './Testing.page.module.sass'
-import { TestingBody } from '../components/TestingBody';
-import { TestData } from '../data/Test';
+import { TestUnit } from '../components/TestingBody';
+import { FrontEndTest, FrontEndTestLocalStorage } from '../data/Test.data';
 
 export const TestingPage = () => 
 {  
-	const [selectTest, setSelectTest] = useState(0);
-
-	// const testingTest = TestData[selectTest].text;
+	const [testIndex, setTestIndex] = useState(0);
 
 	const submit = () => 
 	{
-		if(selectTest < TestData.length - 1)
+		if(testIndex < FrontEndTest.length - 1)
 		{
-			setSelectTest(selectTest => selectTest + 1)
+			setTestIndex(selectTest => selectTest + 1)
 		}
 	};
     
 	
+  
 	return (
 		<div className={s.container}>
-			<div>
+			<div className={s.body}>
 				<div className={s.timer_and_test_name}>
 					<Timer seconds={20} minutes={10} hours={0}></Timer>
 					<div className={s.test_name}>Тестирование</div>
 				</div>
 			
-				<Progressbar count={TestData.length - 1} selectTest={selectTest}/>
+				<Progressbar 
+					count={FrontEndTest.length - 1} 
+					selectTest={testIndex}
+				/>
 
-				<TestingBody data={TestData[selectTest]} onSubmit={submit}/>
+				<TestUnit 
+					index={testIndex}
+					data={FrontEndTest[testIndex]}
+					testLocalStorage={FrontEndTestLocalStorage}
+					onSubmit={submit} 
+				/>
 			</div>
 		</div>
 		
