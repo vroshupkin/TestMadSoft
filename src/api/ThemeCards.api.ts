@@ -8,8 +8,8 @@ export type TApi = {
 
 export const themeCardsApi = async () => 
 {
-  const res = await fetch('https://logiclike.com/docs/courses.json')
-  const arr = await res.json() as TApi[];
+	const res = await fetch('https://logiclike.com/docs/courses.json')
+	const arr = await res.json() as TApi[];
   
-  return arr;
+	return arr;
 }
