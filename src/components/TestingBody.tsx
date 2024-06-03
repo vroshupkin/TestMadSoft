@@ -1,7 +1,7 @@
-import { FC, useEffect, useRef, useState } from "react"
-import s from './TestingBody.module.sass'
-import { TOneOf, TTestData, FrontEndTest } from "../data/Test.data"
+import { FC, useEffect, useState } from "react"
+import { TTestData } from "../data/Test.data"
 import { TestLocalStorage } from "../utils/TestLocalStorage"
+import s from './TestingBody.module.sass'
 
 
 type TApplyButton = 
@@ -17,45 +17,6 @@ const ApplyButton: FC<TApplyButton> = ({onClick}) =>
 	)
 }
 
-type PropsCheckBoxRow = 
-{
-  text: string,
-  onChange?: (answare: boolean) => void,
-  value?: boolean
-}
-const CheckBoxRow: FC<PropsCheckBoxRow> = ({text, onChange, value}) => 
-{
-	const inputRef = useRef<HTMLInputElement>(null);
-  
-	useEffect(() => 
-	{		
-		if(inputRef.current)
-		{
-			inputRef.current.checked = false;
-			console.log(`inputRef.current.checked = ${inputRef.current.checked}`)
-			
-		}
-	}, [])
-
-	const change: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-		if(!onChange) return;
-
-		onChange(e.target.checked);
-	}
-  
-	if(inputRef.current && value != undefined)
-	{
-		inputRef.current.checked =  value;
-	}
-
-	return(
-		<>
-			<input ref={inputRef} className={s.checkbox} type="checkbox" onChange={change}/>
-			<span className={s.checkbox_text}>{text}</span>
-		</>
-	)
-}
-
 type PropsOneOf = 
 {
   variantsNames: string[],
@@ -68,27 +29,26 @@ const OneOf: FC<PropsOneOf> = ({variantsNames, onChange}) =>
 	useEffect(() => 
 	{
 		onChange ? onChange(answare) : '';
-	}, [answare])
+	}, [answare, onChange])
 
-	const change = (index: number, answare: boolean) => 
-	{
-		if(answare === true)
-			setAnsware(index)
-	}
-
-  
+	
 	return(
 		<div>
 			<div>Выберите один вариант</div>
 			{
 				variantsNames.map((text, ind) => 
-        	<div className={s.checkbox_container} key={ind}>
-        		<CheckBoxRow 
-							value={ind === answare}
-							text={text} onChange={(answare) => change(ind, answare)} 
-						/>
-        	</div>
-        	)
+					<div className={s.checkbox_container} key={ind}>
+						<label>
+							<input 
+								type="checkbox" 
+								className={s.checkbox}
+								checked={ind === answare}
+								onChange={() => setAnsware(ind)}							
+							/>
+							{text}
+						</label>
+					</div>
+				)
 			}
 		</div>
 	)
@@ -102,18 +62,24 @@ type PropsManyOf =
 }
 const ManyOf: FC<PropsManyOf> = ({variantsNames, onChange}) => 
 {
-	const [answareArr, setAnswareArr] = useState(Array<boolean>(variantsNames.length).fill(false));
+	const [answareArr, setAnswareArr] = useState<boolean[]>(Array<boolean>(variantsNames.length).fill(false));
+
+	useEffect(() => 
+	{	
+		setAnswareArr(Array<boolean>(variantsNames.length).fill(false));
+	}, [variantsNames])
+	
 	useEffect(() => 
 	{
 		onChange ? onChange(answareArr) : '';
-	}, [answareArr])
+	}, [answareArr, onChange])
 
-	const change = (ind: number) => (answare: boolean) => 
+
+	const change = (ind: number) => (e: React.ChangeEvent<HTMLInputElement>)  => 
 	{
-		// console.log(ind, answare);
-		
-		answareArr[ind] = answare;
-		setAnswareArr(answareArr);
+		const arr = [...answareArr];
+		arr[ind] = e.target.checked;
+		setAnswareArr(arr);
 	}
 
 	return(
@@ -121,10 +87,23 @@ const ManyOf: FC<PropsManyOf> = ({variantsNames, onChange}) =>
 			<div>Выберите один или несколько вариантов</div>
 			{
 				variantsNames.map((text, ind) => 
-        	<div className={s.checkbox_container} key={ind}>
-        		<CheckBoxRow text={text} onChange={change(ind)}/>
-        	</div>
-        	)
+				{
+					console.log(answareArr[ind]);
+					
+					return(
+						<div className={s.checkbox_container} key={ind}>
+							<label>
+								<input 
+									className={s.checkbox}
+									checked={answareArr[ind]}
+									onChange={change(ind)}
+									type="checkbox" 
+								/>
+								{text}
+							</label>
+						</div>
+					)
+				})
 			}
 		</div>
 	)
