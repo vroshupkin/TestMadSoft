@@ -1,3 +1,5 @@
+import { Memory, MemoryOperation } from "../shared/Memory.utils";
+
 export class TestLocalStorage
 {
 	constructor(private testName: string){}
@@ -31,10 +33,19 @@ export class TestLocalStorage
 
 	getMemory()
 	{
-		const keys = [...localStorageKeyIterator];
-		const entires = [...localStorageEntires];
-		console.log(keys);
-		console.log(entires)
+		const used = new Memory(
+			[...localStorageEntires]
+				.map(a => a[0] + '' + a[1] + '')
+				.join('')
+				.length * 16
+		).setUnitType('KB')
+		
+		const total = new Memory(5 * 1024 * 1024).setUnitType('KB'); // 5mb
+		const available = MemoryOperation(total, '-', used).setUnitType('KB');
+		const availableProcents = (100 * available.bytes / total.bytes).toFixed(2) + '%';
+
+
+		return {total, used, available, availableProcents};
 	}
 
 	compareTests() 
