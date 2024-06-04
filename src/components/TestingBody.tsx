@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react"
 import { TTestData } from "../data/Test.data"
-import { TestLocalStorage } from "../utils/TestLocalStorage"
+import { TestLocalStorage } from "../entities/TestLocalStorage"
 import s from './TestingBody.module.sass'
 
 
@@ -54,7 +54,24 @@ const OneOf: FC<PropsOneOf> = ({variantsNames, onChange}) =>
 	)
 }
 
+type PropsInput = 
+{
+	text: string,
+	onChange: (string: string) => void,
+	
+}
 
+const Input: FC<PropsInput> = ({text, onChange}) => 
+{
+	
+	return(
+		<div>
+			<div>Введите ответ</div>
+			<div>{text}</div>
+			<input type="text" onChange={e => onChange(e.target.value)}/>
+		</div>
+	)
+}
 type PropsManyOf = 
 {
   variantsNames: string[],
@@ -120,13 +137,10 @@ type PropsTestingBody =
 }
 export const TestUnit: FC<PropsTestingBody> = ({data, onSubmit, testLocalStorage, index}) => 
 {
-	const [answare, setAnsware] = useState<number| boolean[] | undefined>(undefined);
-	useEffect(() => 
-	{	
-		console.log(index)
-		
-	}, [index])
-
+	const [answare, setAnsware] = useState<string | number | boolean[] | undefined>(undefined);
+	
+	console.log(testLocalStorage.getMemory());
+	
 	const submit = () => 
 	{
 
@@ -140,28 +154,26 @@ export const TestUnit: FC<PropsTestingBody> = ({data, onSubmit, testLocalStorage
 			{
 				testLocalStorage.setManyOf(index, answare);
 			}
-
-			console.log(answare)
-			
+			else if(typeof answare === 'string')
+			{
+				testLocalStorage.setInput(index, answare);
+			}
 			onSubmit()
-
 		}
-
-		// console.log(data);
 	}
 	
-  
-	const {type, variantsNames} = data;
-  
+	const {type, text} = data;
+	const variantsNames = 'variantsNames' in data ? data.variantsNames : [];
+	
 	return(
 		<div>
 			<div className={s.testing_text}>{data.text}</div>
 			{
 				type === 'manyOf' ? <ManyOf variantsNames={variantsNames} onChange={setAnsware}/> :
 					type === 'oneOf' ? <OneOf variantsNames={variantsNames} onChange={setAnsware}/> :
-						''
+						type === 'input' ? <Input text={text} onChange={setAnsware}/> : 
+							''
 			}
-			
 			<ApplyButton onClick={submit}/>
 		</div>
 	)

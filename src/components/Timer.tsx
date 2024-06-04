@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import styles from './Timer.module.sass';
-import { addTimeToDate, getDiffStringTime } from '../utils/Date.utils';
+import { addTimeToDate, getDiffStringTime } from '../shared/Date.utils';
 
 export const StopWatch = () => {
 	const [isClock, setIsClock] = useState(false);

@@ -1,4 +1,4 @@
-import { TestLocalStorage } from "../utils/TestLocalStorage"
+import { TestLocalStorage } from "../entities/TestLocalStorage"
 
 export type TManyOf = 
 {
@@ -17,8 +17,14 @@ export type TOneOf =
 	answare: number
 }
 
+export type TInput = 
+{
+  text: string,
+  type: 'input',
+	answare: string
+}
 export type TTestData = 
-  TManyOf | TOneOf
+  TManyOf | TOneOf | TInput
 
 	
 export const FrontEndTestLocalStorage = new TestLocalStorage('FrontEndTest');
@@ -48,7 +54,7 @@ export const FrontEndTest: TTestData[] =
 	},
 	{
 		type: 'manyOf',
-		text: 'Какие библиотеки тестирования вы знаете?',
+		text: 'Что из перечисленного является библиотеками тестирования?',
 		variantsNames: [
 			'Mocha',
 			'Jest',
@@ -57,6 +63,11 @@ export const FrontEndTest: TTestData[] =
 			'React'
 		],
 		answare: '11010'
+	},
+	{
+		type: 'input',
+		text: 'Сколько будет 2 ** 3?',
+		answare: '8'
 	},
 	
 
