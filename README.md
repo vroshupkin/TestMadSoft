@@ -1,7 +1,6 @@
-# LogicLike
+# Readme
 
 Временная онлайн версия http://rythmer.online/
-
 
 Чтобы собрать проект в папку dist
 
