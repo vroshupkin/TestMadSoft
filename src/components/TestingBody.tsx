@@ -56,19 +56,20 @@ const OneOf: FC<PropsOneOf> = ({variantsNames, onChange}) =>
 
 type PropsInput = 
 {
-	text: string,
-	onChange: (string: string) => void,
-	
+	value: string,
+	onChange: (string: string) => void	
 }
 
-const Input: FC<PropsInput> = ({text, onChange}) => 
+const Input: FC<PropsInput> = ({value, onChange}) => 
 {
-	
 	return(
 		<div>
 			<div>Введите ответ</div>
-			<div>{text}</div>
-			<input type="text" onChange={e => onChange(e.target.value)}/>
+			<input 
+				type="text"
+				value={value}
+				onChange={e => onChange(e.target.value)}
+			/>
 		</div>
 	)
 }
@@ -105,8 +106,6 @@ const ManyOf: FC<PropsManyOf> = ({variantsNames, onChange}) =>
 			{
 				variantsNames.map((text, ind) => 
 				{
-					console.log(answareArr[ind]);
-					
 					return(
 						<div className={s.checkbox_container} key={ind}>
 							<label>
@@ -126,7 +125,6 @@ const ManyOf: FC<PropsManyOf> = ({variantsNames, onChange}) =>
 	)
 }
 
-
 type PropsTestingBody = 
 {
   data: TTestData,
@@ -139,13 +137,10 @@ export const TestUnit: FC<PropsTestingBody> = ({data, onSubmit, testLocalStorage
 {
 	const [answare, setAnsware] = useState<string | number | boolean[] | undefined>(undefined);
 	
-	console.log(testLocalStorage.getMemory());
-	
 	const submit = () => 
 	{
-
 		if(onSubmit && answare != undefined)
-		{
+		{		
 			if(typeof answare === 'number')
 			{
 				testLocalStorage.setOneOf(index, answare);
@@ -158,11 +153,13 @@ export const TestUnit: FC<PropsTestingBody> = ({data, onSubmit, testLocalStorage
 			{
 				testLocalStorage.setInput(index, answare);
 			}
+
+			setAnsware(undefined);
 			onSubmit()
 		}
 	}
 	
-	const {type, text} = data;
+	const {type} = data;
 	const variantsNames = 'variantsNames' in data ? data.variantsNames : [];
 	
 	return(
@@ -171,7 +168,7 @@ export const TestUnit: FC<PropsTestingBody> = ({data, onSubmit, testLocalStorage
 			{
 				type === 'manyOf' ? <ManyOf variantsNames={variantsNames} onChange={setAnsware}/> :
 					type === 'oneOf' ? <OneOf variantsNames={variantsNames} onChange={setAnsware}/> :
-						type === 'input' ? <Input text={text} onChange={setAnsware}/> : 
+						type === 'input' ? <Input value={typeof answare === 'string'? answare : ''} onChange={setAnsware}/> : 
 							''
 			}
 			<ApplyButton onClick={submit}/>

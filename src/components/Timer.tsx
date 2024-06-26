@@ -13,8 +13,7 @@ export const StopWatch = () => {
 	{
 		const id = setInterval(
 			() => {
-				// @ts-ignore
-				const date = new Date(new Date() - startTimer);
+				const date = new Date(Number(new Date()) - Number(startTimer));
                 
 				setSeconds(date.getSeconds());
 				setMinutes(date.getMinutes());
@@ -23,10 +22,10 @@ export const StopWatch = () => {
 		);
 
 		return () => clearInterval(id);
-	}, [])
+	}, [startTimer])
 
 	useEffect(() => {
-		console.log(isClock);
+		// console.log(isClock);
 	}, [isClock])
         
     
@@ -38,8 +37,6 @@ export const StopWatch = () => {
 	)
 }
 
-
-
 type PropsTimer = {
     hours: number,
     minutes: number,
@@ -48,11 +45,11 @@ type PropsTimer = {
 }
 export const Timer: FC<PropsTimer> = ({hours, minutes, seconds, onTimerComplete}) => {
 	const [nowTime, setNowTime] = useState(new Date())
-	const [endTime, setEndTime] = useState(
+	const [endTime] = useState(
 		addTimeToDate(new Date(), 0, seconds, minutes, hours)
 	);
     
-	const [isClock, setIsClock] = useState(false);
+	// const [isClock, setIsClock] = useState(false);
     
 	useEffect(() => 
 	{
@@ -64,17 +61,12 @@ export const Timer: FC<PropsTimer> = ({hours, minutes, seconds, onTimerComplete}
 					return;
 				}
 				setNowTime(new Date())
-            
 			},
 			1000
 		);
 
 		return () => clearInterval(id);
-	}, [])
-
-	// useEffect(() => {
-	//     console.log(isClock);
-	// }, [isClock])
+	}, [endTime, nowTime, onTimerComplete])
         
     
 	return (

@@ -1,24 +1,28 @@
-.theme-selector-container
+.container
     width: 264px
     padding: 12px
     box-sizing: border-box
     border: 1px solid #CFCFE4
     border-radius: 18px
 
-.theme-row
+.bar
     border-radius: 12px
     cursor: pointer
     user-select: none
     height: 42px
     font-weight: 800
     width: 240px
+    display: flex
+    justify-content: center
+    &:hover
+        background-color: #ff8b8b
 
-.theme-row > div
+.bar > div
     padding: 12px
 
-.theme-row-select
+.bar_row_select
     color: white
     background-color: #5FBF77
 
-.theme-row-non_select:hover
+.bar_row_non_select:hover
     background-color: #b6eec4

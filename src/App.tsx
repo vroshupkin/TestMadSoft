@@ -1,24 +1,30 @@
 
-import { useState } from 'react';
-
-import styles from './App.module.sass'
-import { ThemeSelector } from './components/ThemeSelector';
+import { Route, Routes } from 'react-router-dom';
+import styles from './App.module.sass';
+import { LefetPanel } from './components/LeftPanel';
+import { useAuthorization } from './entities/useAuthorization';
+import { HomePage } from './page/Home.page';
+import { LoginPage } from './page/Login.page';
 import { TestingPage } from './page/Testing.page';
+
+
 
 function App() 
 {
-	const setFilterVal = useState('')[1];
+
+	const [roles, logOut, updateUserRole] = useAuthorization();
 
 	return (
-		<>
-			<div className={styles.app_container}>
-				<ThemeSelector onChange={setFilterVal}/>
-				{/* <ThemeCards filterVal={filterVal}/> */}
-
-				<TestingPage/>
-        
-			</div>
-		</>
+		<div className={styles.app_container}>
+			<LefetPanel logOut={logOut} roles={roles}/>
+				
+			<Routes>
+				<Route path='/' element={<HomePage/>}/>
+				<Route path='/home' element={<HomePage/>}/>
+				<Route path='/login' element={<LoginPage updateUserRole={updateUserRole}/>} />
+				<Route path='/test' element={<TestingPage/>} />
+			</Routes>
+		</div>
 	)
 }
 
